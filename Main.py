@@ -14,16 +14,14 @@ app = Flask(__name__)
 
 
     
-def process_data(laser = "unknown" ):
+def process_data():
     templateData = {
-      'laser' : laser,
-      'comm_status' : comm.getState()
+      'laser' : comm.readLaser(),
+      'comm_status' : comm.getState(),
+      'temp' : comm.readTemperature(),
+      'hum'  : comm.readHumidity()
       }
     return templateData
-
-@app.route("/connect/")
-def connect():
-    return render_template('main.html', **process_data())
 
 
 @app.route("/")
@@ -33,8 +31,8 @@ def mainpage():
 
 @app.route("/laser/")
 def laser():
-    laser_stat = comm.triggerLaser()
-    return render_template('main.html', **process_data(laser = laser_stat))
+    comm.triggerLaser()
+    return render_template('main.html', **process_data())
 
 
 if __name__ == "__main__":

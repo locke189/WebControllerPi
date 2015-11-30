@@ -26,7 +26,13 @@
 		#comms{
 			padding:10px;
 		}
-		
+		#humidity{
+			background-color: #eeeeee;
+			padding:10px;
+			}
+		#temperature{
+			padding:10px;
+    		}
     </style>
     
   </head>
@@ -52,7 +58,8 @@
       <ul class="nav navbar-nav">
         <li class="active"><a href="#comms">Connection Status</a></li>
         <li><a href="#laser">Laser</a></li>
-        <li><a href="#">PIR</a></li>
+        <li><a href="#temperature">Temperature</a></li>
+        <li><a href="#humidity">Humidity</a></li>
       
       </ul>
     
@@ -70,7 +77,7 @@ Secciones
                 <div class="col-lg-12">
                     <h1>Connection Status</h1>
                     <p>RaspberryPi serial port status needed to send commands to Arduino Leonardo</p>
-                    <a class="btn btn-default page-scroll" href="/connect/"> {{ comm_status }} </a>
+                    <a class="btn btn-default page-scroll" href="#"> {{ comm_status }} </a>
                 </div>
             </div>
         </div>
@@ -86,7 +93,35 @@ Secciones
                 <div class="col-lg-12">
                     <h1>Laser Module</h1>
                     <p>Turn on/off remote laser module in Arduino Leonardo</p>
-                    <a class="btn btn-default page-scroll" href="/laser/">Estado = {{ laser }}</a>
+                    <a class="btn btn-default page-scroll" href="/laser/">{{ laser }}</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Intro Section -->
+    <section id="temperature" class="about-section injected-text">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>Temperature Sensor</h1>
+                    <p>Reads temperature data from M30-DHT11 sensor in Arduino Leonardo</p>
+                    <a class="btn btn-default page-scroll" href="#">{{ temp }}</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Intro Section -->
+    <section id="humidity" class="about-section injected-text">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>Humidity Sensor</h1>
+                    <p>Reads humidity data from M30-DHT11 sensor in Arduino Leonardo</p>
+                    <a class="btn btn-default page-scroll" href="#">{{ hum }}</a>
                 </div>
             </div>
         </div>

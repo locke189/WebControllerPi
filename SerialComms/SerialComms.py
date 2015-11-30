@@ -41,9 +41,9 @@ class SerialComms(object):
         return self.status
     
     
-    def triggerLaser(self,device="A"):
+    def handshake(self,device="A"):
         '''
-        Triggers laser ON/OFF
+        Handshake with de selected device
         '''
         #Handshake with device
         self.link.write(device)
@@ -51,18 +51,34 @@ class SerialComms(object):
         time.sleep(1) 
         
         while self.link.inWaiting() > 0:
-            response = self.link.read(1)
+            response = self.link.read(self.link.inWaiting())
             print(">> " + response)
-            
+        
         if response == device :
-            response = "@"
             print("Device " + device + " Handshake")
+            return True
+            
+        else:
+            print("Device " + device + " Handshake Failed")
+            return False
+        
+        return response
+    
+    def triggerLaser(self,device="A"):
+        '''
+        Triggers laser ON/OFF
+        '''
+        #Handshake with device
+        handshake = self.handshake(device)
+            
+        if handshake :
+            response = "@"
             self.link.write("0") #lasser toggle serial command
             
             #checking for successful action
             time.sleep(1) 
             while self.link.inWaiting() > 0:
-                response = self.link.read(1)
+                response = self.link.read(self.link.inWaiting())
                 print(">> " + response)
                 
             if response == "0":
@@ -73,4 +89,71 @@ class SerialComms(object):
                 return "Laser Off"
         
         return "Laser Error"
+    
+    def readLaser(self,device='A'):
+        '''
+        reads laset status
+        '''
+        handshake = self.handshake(device)
+            
+        if handshake :
+            self.link.write("1") #lasser toggle serial command
+            response = "";
+            #checking for successful action
+            time.sleep(1) 
+            while self.link.inWaiting() > 0:
+                response += self.link.read(1)
+            
+            print(">> Laser: " + response)
+            
+            if response[0] == '0':
+                return "Laser is OFF"
+            else:
+                return "Laser is ON"
+            
+        return "Laser Error"
+    
+    def readTemperature(self,device='A'):
+        '''
+        reads temperature from M30-DHT11 module
+        '''
+        handshake = self.handshake(device)
+            
+        if handshake :
+            self.link.write("2") #lasser toggle serial command
+            response = "";
+            #checking for successful action
+            time.sleep(1) 
+            while self.link.inWaiting() > 0:
+                response += self.link.read(self.link.inWaiting())
+            
+            print(">> Temp: " + response)
+                
+            return response
+            
+        return "Temperature Error"
+    
+    def readHumidity(self,device='A'):
+        '''
+        reads humidity data from M30-DHT11 module
+        '''
+        handshake = self.handshake(device)
+            
+        if handshake :
+            self.link.write("3") #lasser toggle serial command
+            response = "";
+            #checking for successful action
+            time.sleep(1) 
+            while self.link.inWaiting() > 0:
+                response += self.link.read(self.link.inWaiting())
+            
+            print(">> Hum: " + response)
+                
+            return response
+            
+        return "Humidity Error"
+    
+    
+    
+    
     
