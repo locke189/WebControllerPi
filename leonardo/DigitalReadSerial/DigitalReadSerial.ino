@@ -16,8 +16,8 @@ float temperature;
 
 void setup() {                
 // Turn the Serial Protocol ON
-  Serial1.begin(9600);
-  Serial.begin(9600);
+  Serial1.begin(115200);
+  Serial.begin(115200);
   pinMode (12, OUTPUT);
   digitalWrite (12, LOW);
   pinMode (13, OUTPUT);
@@ -44,6 +44,7 @@ void loop() {
     thisDevice = true;
     digitalWrite (13, HIGH);
     Serial1.write(thisDeviceNumber);
+    Serial.write(thisDeviceNumber);
     }
 
    //operation "0" laser toggle hex30 

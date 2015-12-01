@@ -16,7 +16,7 @@ class SerialComms(object):
     '''
 
 
-    def __init__(self, port='/dev/ttyUSB0', baud = 9600):
+    def __init__(self, port='/dev/ttyUSB0', baud = 115200):
         '''
         Constructor
         '''
@@ -48,7 +48,7 @@ class SerialComms(object):
         #Handshake with device
         self.link.write(device)
         print("<< " + device)
-        time.sleep(1) 
+        time.sleep(0.5) 
         
         while self.link.inWaiting() > 0:
             response = self.link.read(self.link.inWaiting())
@@ -76,7 +76,7 @@ class SerialComms(object):
             self.link.write("0") #lasser toggle serial command
             
             #checking for successful action
-            time.sleep(1) 
+            time.sleep(0.5) 
             while self.link.inWaiting() > 0:
                 response = self.link.read(self.link.inWaiting())
                 print(">> " + response)
@@ -100,7 +100,7 @@ class SerialComms(object):
             self.link.write("1") #lasser toggle serial command
             response = "";
             #checking for successful action
-            time.sleep(1) 
+            time.sleep(0.5) 
             while self.link.inWaiting() > 0:
                 response += self.link.read(1)
             
@@ -123,7 +123,7 @@ class SerialComms(object):
             self.link.write("2") #lasser toggle serial command
             response = "";
             #checking for successful action
-            time.sleep(1) 
+            time.sleep(0.5) 
             while self.link.inWaiting() > 0:
                 response += self.link.read(self.link.inWaiting())
             
@@ -143,7 +143,7 @@ class SerialComms(object):
             self.link.write("3") #lasser toggle serial command
             response = "";
             #checking for successful action
-            time.sleep(1) 
+            time.sleep(0.5) 
             while self.link.inWaiting() > 0:
                 response += self.link.read(self.link.inWaiting())
             
