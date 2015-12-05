@@ -5,21 +5,25 @@ Created on Nov 29, 2015
 '''
 from flask import Flask, render_template
 from SerialComms.SerialComms import SerialComms
+from ArduIoT.Leonardo import Leonardo
 import os
 import time
 
 
 comm = SerialComms()
+leo1 = Leonardo(comm,"A") # serial comms device "A"
 app = Flask(__name__)
 
 
     
 def process_data():
+    leo1.writeDevice("SUMMARY")
+    
     templateData = {
-      'laser' : comm.readLaser(),
+      'laser' : leo1.componentData["LASER"],
       'comm_status' : comm.getState(),
-      'temp' : comm.readTemperature(),
-      'hum'  : comm.readHumidity(),
+      'temp' : leo1.componentData["TEMPERATURE"],
+      'hum'  : leo1.componentData["HUMIDITY"],
       'timestamp'  : time.time()
       }
     return templateData
@@ -32,7 +36,7 @@ def mainpage():
 
 @app.route("/laser/")
 def laser():
-    comm.triggerLaser()
+    leo1.writeDevice("LASER_TOGGLE")
     return render_template('main.html', **process_data())
 
 @app.route("/snapshot/")

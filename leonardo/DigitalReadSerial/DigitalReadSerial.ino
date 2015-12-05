@@ -148,6 +148,7 @@ void loop() {
     if ((serialData[0] == SOH ) && (serialData[1] == DEVICE_ID) && (deviceEnabled == false)){
         activateDevice();
         Serial1.write(DEVICE_ID);
+        Serial1.write(RS);
         timeStamp = millis();
      }
 
@@ -157,7 +158,6 @@ void loop() {
 
           
           //laser state
-          Serial1.write(RS);
           Serial1.write(LASER_ID);
           if( laser_state == true ){
             Serial1.write(LASER_ON);
@@ -177,7 +177,9 @@ void loop() {
           Serial1.print(humidity);
     
           //end
+          Serial1.write(RS);
           Serial1.write(EOT);
+          deactivateDevice();
       }
   
    
@@ -185,18 +187,22 @@ void loop() {
     if( (serialData[2] == LASER_TOGGLE) && (deviceEnabled == true) && (laser_state == false) ){
          Serial1.write(LASER_ID);
          Serial1.write(LASER_ON);
-         Serial1.write(0x04);
+         Serial1.write(RS);
+         Serial1.write(EOT);
          digitalWrite (LASER_PIN, HIGH);
          laser_state = true;
+         deactivateDevice();
 
     }
     
     if( (serialData[2] == LASER_TOGGLE) && (deviceEnabled == true) && (laser_state == true) ){
          Serial1.write(LASER_ID);
          Serial1.write(LASER_OFF);
+         Serial1.write(RS);
          Serial1.write(EOT); 
          digitalWrite (LASER_PIN, LOW);
          laser_state = false;
+         deactivateDevice();
  
     }
 
@@ -209,8 +215,9 @@ void loop() {
           else{
             Serial1.write(byte(LASER_OFF));
             }
-          
-          //Serial1.write(byte(laser_state));
+          Serial1.write(RS);
+          Serial1.write(EOT);
+          deactivateDevice();
 
     }
 
@@ -221,7 +228,9 @@ void loop() {
          //temperature       =   dht.readTemperature() - TEMP_OFFSET; //Se lee la temperatura - offset
          Serial1.write(TEMPERATURE_ID);
          Serial1.print(temperature);
+         Serial1.write(RS);
          Serial1.write(EOT);
+         deactivateDevice();
 
     }
 
@@ -230,7 +239,9 @@ void loop() {
          //humidity = dht.readHumidity();
          Serial1.write(HUMIDITY_ID);
          Serial1.print(humidity);
+         Serial1.write(RS);
          Serial1.write(EOT);
+         deactivateDevice();
     }
 
 
