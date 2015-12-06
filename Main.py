@@ -25,7 +25,7 @@ def process_data():
       'temp' : leo1.componentData["TEMPERATURE"],
       'hum'  : leo1.componentData["HUMIDITY"],
       'timestamp'  : time.time()
-      }
+    }
     return templateData
 
 
@@ -42,7 +42,9 @@ def laser():
 @app.route("/snapshot/")
 def snapshot():
     path = os.getcwd()
-    fs_string = 'sudo fswebcam -r 640x480 -S 15 --flip h --jpeg 95 --shadow --title "@Juan_Insuasti" --subtitle "Home" --info "Monitor: Active @ 1 fpm" --save ' + path + '/static/home.jpg'
+    fs_string = ('sudo fswebcam -r 640x480 -S 15 --flip h --jpeg 95 --shadow --title'
+                '"@Juan_Insuasti" --subtitle "Home" --info "Monitor: Active @ 1 fpm"'
+                ' --save %s/static/home.jpg' % (path))
     print(fs_string)
     os.system(fs_string)
     return render_template('main.html', **process_data())
