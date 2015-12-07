@@ -3,7 +3,7 @@ Created on Nov 29, 2015
 
 @author: Juan_Insuasti
 '''
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect
 from SerialComms.SerialComms import SerialComms
 from ArduIoT.Leonardo import Leonardo
 import os
@@ -37,7 +37,7 @@ def mainpage():
 @app.route("/laser/")
 def laser():
     leo1.writeDevice("LASER_TOGGLE")
-    return render_template('main.html', **process_data())
+    return redirect("/")
 
 @app.route("/snapshot/")
 def snapshot():
@@ -45,7 +45,8 @@ def snapshot():
     fs_string = 'sudo fswebcam -r 640x480 -S 15 --flip h --jpeg 95 --shadow --title "@Juan_Insuasti" --subtitle "Home" --info "Monitor: Active @ 1 fpm" --save ' + path + '/static/home.jpg'
     print(fs_string)
     os.system(fs_string)
-    return render_template('main.html', **process_data())
+    return redirect("/")
+    #return render_template('main.html', **process_data())
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=80, debug=False, use_reloader=False)
