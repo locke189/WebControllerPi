@@ -1,214 +1,178 @@
-
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-	<meta http-equiv="cache-control" content="max-age=0" />
-	<meta http-equiv="cache-control" content="no-cache" />
-	<META HTTP-EQUIV="Expires" CONTENT="-1">	
-	<meta http-equiv="pragma" content="no-cache" />
-	
-	
-    <title>RaspberryPi WebController</title>
-    <!-- Bootstrap core CSS -->
-    <link href="https://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Stylesheets -->
-    <style type="text/css">
-		.injected-text {
-		  margin-top: 50px;
-		  text-align: center;
-		
-		}
-		.img-centered {
-			margin-left: auto;
-    		margin-right: auto;
-		}
-		
-		#laser{
-			background-color: #eeeeee;
-			padding:10px;
-		}
-		#comms{
-			padding:10px;
-		}
-		#humidity{
-			background-color: #eeeeee;
-			padding:10px;
-			margin:20;
-			padding-bottom:40;
-			}
-		#temperature{
-			padding:10px;
-			
-    		}
-    	
-    	.speech-bubble {
-    	
-		  position: relative;
-		  background-color: #666666;
-		  
-		  margin-left: auto;
-    	  margin-right: auto;
-    	  margin-bottom:-40px;
-		  
-		  width: 200px;
-		  height: 40px;
-		  line-height: 40px; 
-		 
-		  color: white;
-		  text-align: center;
-		  border-radius: 10px;
-		 
-		  font-family: sans-serif;
-		}
-		 
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <meta http-equiv="cache-control" content="max-age=0" />
+        <meta http-equiv="cache-control" content="no-cache" />
+        <META HTTP-EQUIV="Expires" CONTENT="-1">    
+        <meta http-equiv="pragma" content="no-cache" />
+        <title>RaspberryPi WebController</title>
+        <!-- Bootstrap core CSS -->
+        <link href="https://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
 
+        <!-- Stylesheets -->
+        <style type="text/css">
 
-    </style>
-    
-    <script type="text/javascript" src="//code.jquery.com/jquery-1.4.2.min.js"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
-    <script type="text/javascript" charset="utf-8">
-    
-    	socket = io.connect();
-    	socket.on('new_data', function(message) {
-    	    console.log("[x] Received    : " + message.LASER );
-    	    $("#laser_btn").text(message.LASER);
-    	    
-    	});
-    	
-		function laser_toggle() {
-			console.log("[x] sent    : Laser toggle"  );
-			socket.emit('laser_toggle', {message: ""});
-			return false;
-		};
-    	
-    	
-    </script>
-    
-  </head>
+            .injected-text {
+                text-align: center;
+                padding-bottom: 15px;
+                padding-top: 15px;
+            }
+            .injected-text h1 {
+                margin-top: 0;
+            }
 
+            .injected-text:nth-child(odd) {
+                background: #eee;
+            }
+            .img-centered {
+                margin-left: auto;
+                margin-right: auto;
+            }
+            
+            #comms {
+                margin-top: 50px;
+            }
+            
+            .speech-bubble {
+                background-color: #666666;
+                border-radius: 10px;
+                color: #ffffff;
+                display: inline-block;
+                padding: 10px;
+            }
+        </style>
 
-<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
-
-
-<!-- navigation Bar -->
-<nav class="navbar navbar-inverse navbar-fixed-top">
-  <div class="container-fluid">
-    <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#myNavbar" aria-expanded="false" aria-controls="navbar">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span> 
-      </button>
-      <a class="navbar-brand" href="#">RaspberryPi Web Controller</a>
-    </div>
-    
-    <div class="collapse navbar-collapse" id="myNavbar">
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="#comms">Connection Status</a></li>
-        <li><a href="#laser">Laser</a></li>
-        <li><a href="#temperature">Temperature</a></li>
-        <li><a href="#humidity">Humidity</a></li>
-      
-      </ul>
-    
-    </div>
-  </div>
-</nav>
-
-<!---
-Secciones 
--->
-    <!-- Intro Section -->
-    <section id="comms" class="intro-section injected-text">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-12">
-                    <h1>Connection Status</h1>
-                    <p>RaspberryPi serial port status needed to send commands to Arduino Leonardo</p>
-                    <p  class="speech-bubble"> Serial Port is {{ comm_status }} </p>
+        <script type="text/javascript" src="//code.jquery.com/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
+        <script type="text/javascript" charset="utf-8">
+            socket = io.connect();
+            socket.on('new_data', function(message) {
+                console.log("[x] Received    : " + message.LASER );
+                $("#laser_btn").text(message.LASER);
+                
+            });
+            
+            function laser_toggle() {
+                console.log("[x] sent    : Laser toggle"  );
+                socket.emit('laser_toggle', {message: ""});
+                return false;
+            };
+        </script>
+    </head>
+    <body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+        <!-- navigation Bar -->
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+          <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#myNavbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span> 
+                    </button>
+                    <a class="navbar-brand" href="#">RaspberryPi Web Controller</a>
+                </div>
+                
+                <div class="collapse navbar-collapse" id="myNavbar">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="#comms">Connection Status</a></li>
+                        <li><a href="#laser">Laser</a></li>
+                        <li><a href="#temperature">Temperature</a></li>
+                        <li><a href="#humidity">Humidity</a></li>
+                    </ul>
                 </div>
             </div>
-        </div>
-    </section>
+        </nav>
 
-<!---
-Secciones 
--->
-    <!-- Intro Section -->
-    <section id="laser" class="about-section injected-text">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-12">
-                    <h1>Laser Module</h1>
-                    <p>Turn on/off remote laser module in Arduino Leonardo</p>
-                    <!--
-                    <a class="btn btn-default page-scroll" href="/laser/" id>{{ laser }}</a>
-                    -->
-                    <p><button class="btn btn-default target" id="laser_btn" onclick="laser_toggle()">Loading...</button></p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-    <!-- Intro Section -->
-    <section id="temperature" class="about-section injected-text">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-12">
-                    <h1>Temperature Sensor</h1>
-                    <p>Reads temperature data from M30-DHT11 sensor in Arduino Leonardo</p>
-                    <p class="speech-bubble speech-bubble-top page-scroll" >{{ temp }} Cº</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-    <!-- Intro Section -->
-    <section id="humidity" class="about-section injected-text">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-12">
-                    <h1>Humidity Sensor</h1>
-                    <p>Reads humidity data from M30-DHT11 sensor in Arduino Leonardo</p>
-                    <p class="speech-bubble speech-bubble-top2" href="#">{{ hum }} %</p>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    
+        <!---
+        Secciones 
+        -->
         <!-- Intro Section -->
-    <section id="snapshot" class="about-section injected-text">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-12">
-                    <h1>Snapshot</h1>
-                    <p>Take a look of my lab!</p>
-                    <p><a class="btn btn-default page-scroll" href="/snapshot/">Refresh</a></p>
-                	<img src="/static/home.jpg?{{timestamp}}" class="img-responsive img-centered" align="middle" alt="My Lab!">
+        <section id="comms" class="intro-section injected-text">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1>Connection Status</h1>
+                        <p>RaspberryPi serial port status needed to send commands to Arduino Leonardo</p>
+                        <p  class="speech-bubble"> Serial Port is {{ comm_status }} </p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-<!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-    <script src="https://getbootstrap.com/dist/js/bootstrap.min.js"></script>
+        <!---
+        Secciones 
+        -->
+        <!-- Intro Section -->
+        <section id="laser" class="injected-text">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1>Laser Module</h1>
+                        <p>Turn on/off remote laser module in Arduino Leonardo</p>
+                        <!--
+                        <a class="btn btn-default page-scroll" href="/laser/" id>{{ laser }}</a>
+                        -->
+                        <p><button class="btn btn-default target" id="laser_btn" onclick="laser_toggle()">Loading...</button></p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-   </body>
-   
+
+        <!-- Intro Section -->
+        <section id="temperature" class="injected-text">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1>Temperature Sensor</h1>
+                        <p>Reads temperature data from M30-DHT11 sensor in Arduino Leonardo</p>
+                        <p class="speech-bubble speech-bubble-top page-scroll" >{{ temp }} Cº</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Intro Section -->
+        <section id="humidity" class="injected-text">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1>Humidity Sensor</h1>
+                        <p>Reads humidity data from M30-DHT11 sensor in Arduino Leonardo</p>
+                        <p class="speech-bubble speech-bubble-top2" href="#">{{ hum }} %</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        
+            <!-- Intro Section -->
+        <section id="snapshot" class="injected-text">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1>Snapshot</h1>
+                        <p>Take a look of my lab!</p>
+                        <p><a class="btn btn-success page-scroll" href="/snapshot/">Refresh</a></p>
+                        <img src="/static/home.jpg?{{timestamp}}" class="img-responsive img-centered" align="middle" alt="My Lab!">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+        <script src="https://getbootstrap.com/dist/js/bootstrap.min.js"></script>
+    </body>
 </html>
