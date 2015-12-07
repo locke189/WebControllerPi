@@ -17,49 +17,34 @@
 
         <!-- Stylesheets -->
         <style type="text/css">
+
             .injected-text {
-                margin-top: 50px;
                 text-align: center;
+                padding-bottom: 15px;
+                padding-top: 15px;
+            }
+            .injected-text h1 {
+                margin-top: 0;
+            }
+
+            .injected-text:nth-child(odd) {
+                background: #eee;
             }
             .img-centered {
                 margin-left: auto;
                 margin-right: auto;
             }
             
-            #laser {
-                background-color: #eeeeee;
-                padding:10px;
-            }
             #comms {
-                padding:10px;
-            }
-            #humidity {
-                background-color: #eeeeee;
-                padding:10px;
-                margin:20;
-                padding-bottom:40;
-            }
-            #temperature {
-                padding:10px;
+                margin-top: 50px;
             }
             
             .speech-bubble {
-                position: relative;
                 background-color: #666666;
-
-                margin-left: auto;
-                margin-right: auto;
-                margin-bottom:-40px;
-
-                width: 200px;
-                height: 40px;
-                line-height: 40px; 
-
-                color: #ffffff;
-                text-align: center;
                 border-radius: 10px;
-
-                font-family: sans-serif;
+                color: #ffffff;
+                display: inline-block;
+                padding: 10px;
             }
         </style>
 
@@ -84,25 +69,25 @@
         <!-- navigation Bar -->
         <nav class="navbar navbar-inverse navbar-fixed-top">
           <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#myNavbar" aria-expanded="false" aria-controls="navbar">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span> 
-                </button>
-                <a class="navbar-brand" href="#">RaspberryPi Web Controller</a>
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#myNavbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span> 
+                    </button>
+                    <a class="navbar-brand" href="#">RaspberryPi Web Controller</a>
+                </div>
+                
+                <div class="collapse navbar-collapse" id="myNavbar">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="#comms">Connection Status</a></li>
+                        <li><a href="#laser">Laser</a></li>
+                        <li><a href="#temperature">Temperature</a></li>
+                        <li><a href="#humidity">Humidity</a></li>
+                    </ul>
+                </div>
             </div>
-            
-            <div class="collapse navbar-collapse" id="myNavbar">
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="#comms">Connection Status</a></li>
-                    <li><a href="#laser">Laser</a></li>
-                    <li><a href="#temperature">Temperature</a></li>
-                    <li><a href="#humidity">Humidity</a></li>
-                </ul>
-            </div>
-          </div>
         </nav>
 
         <!---
@@ -125,7 +110,7 @@
         Secciones 
         -->
         <!-- Intro Section -->
-        <section id="laser" class="about-section injected-text">
+        <section id="laser" class="injected-text">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-12">
@@ -142,7 +127,7 @@
 
 
         <!-- Intro Section -->
-        <section id="temperature" class="about-section injected-text">
+        <section id="temperature" class="injected-text">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-12">
@@ -156,7 +141,7 @@
 
 
         <!-- Intro Section -->
-        <section id="humidity" class="about-section injected-text">
+        <section id="humidity" class="injected-text">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-12">
@@ -170,13 +155,13 @@
         
         
             <!-- Intro Section -->
-        <section id="snapshot" class="about-section injected-text">
+        <section id="snapshot" class="injected-text">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-12">
                         <h1>Snapshot</h1>
                         <p>Take a look of my lab!</p>
-                        <p><a class="btn btn-default page-scroll" href="/snapshot/">Refresh</a></p>
+                        <p><a class="btn btn-success page-scroll" href="/snapshot/">Refresh</a></p>
                         <img src="/static/home.jpg?{{timestamp}}" class="img-responsive img-centered" align="middle" alt="My Lab!">
                     </div>
                 </div>
