@@ -46,6 +46,7 @@ DHT dht(DHTPIN, DHTTYPE);   //declaration of DHT object
 #define   HUMIDITY_ID     0x33
 #define   DHT_POLL        5     // Poll sensor data each 5 interrupts
 #define   SENSOR_TIME     10000 // 10 seconds
+
 //Sensor/actuator pins
 #define LASER_PIN     12
 #define BOARD_LED     13

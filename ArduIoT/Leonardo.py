@@ -64,7 +64,7 @@ class Leonardo(object):
         decode()
         Transforms serial data into sensor data in the corresponding dictionary
         '''
-        if self.rawData is not None:
+        if self.rawData:
             if self.rawData.pop(0) == self.thisDevice:
                 for data in self.rawData:
                     if data == chr(0x04): #endoffile

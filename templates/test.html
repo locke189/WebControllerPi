@@ -48,15 +48,13 @@
 
         <script type="text/javascript" src="//code.jquery.com/jquery-1.4.2.min.js"></script>
         <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
+        <!--
         <script type="text/javascript" charset="utf-8">
-            socket = io.connect(window.location.href);
+            socket = io.connect();
             socket.on('new_data', function(message) {
                 console.log("[x] Received    : " + message.LASER );
                 $("#laser_btn").text(message.LASER);
-                console.log("[x] Received    : " + message.TEMPERATURE );
-                $("#temp").text(message.TEMPERATURE + " Cº");
-                console.log("[x] Received    : " + message.HUMIDITY );
-                $("#hum").text(message.HUMIDITY + " %");
+                
             });
             
             function laser_toggle() {
@@ -64,22 +62,8 @@
                 socket.emit('laser_toggle', {message: ""});
                 return false;
             };
-
-            $(document).ready(function() {
-                   window.setInterval("refreshCamera();", 3500); // 5 second interval
-                });
-
-                var url = window.location.href + 'static/home.jpg?';
-                console.log(url);
-                var forcerefresh = 0;
-
-                function refreshCamera()
-                {
-                   
-                   $('#pic').attr('src',url + Date.now());
-                        };
-
         </script>
+        -->
     </head>
     <body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
         <!-- navigation Bar -->
@@ -116,7 +100,7 @@
                     <div class="col-lg-12">
                         <h1>Connection Status</h1>
                         <p>RaspberryPi serial port status needed to send commands to Arduino Leonardo</p>
-                        <p  class="speech-bubble"> Serial Port is {{ comm_status }} </p>
+                        <p  class="speech-bubble"> Serial Port is </p>
                     </div>
                 </div>
             </div>
@@ -125,50 +109,6 @@
         <!---
         Secciones 
         -->
-        <!-- Intro Section -->
-        <section id="laser" class="injected-text">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h1>Laser Module</h1>
-                        <p>Turn on/off remote laser module in Arduino Leonardo</p>
-                        <!--
-                        <a class="btn btn-default page-scroll" href="/laser/" id>{{ laser }}</a>
-                        -->
-                        <p><button class="btn btn-default target" id="laser_btn" onclick="laser_toggle()">Loading...</button></p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-
-        <!-- Intro Section -->
-        <section id="temperature" class="injected-text">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h1>Temperature Sensor</h1>
-                        <p>Reads temperature data from M30-DHT11 sensor in Arduino Leonardo</p>
-                        <p id="temp"class="speech-bubble speech-bubble-top page-scroll" >{{ temp }} Cº</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-
-        <!-- Intro Section -->
-        <section id="humidity" class="injected-text">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h1>Humidity Sensor</h1>
-                        <p>Reads humidity data from M30-DHT11 sensor in Arduino Leonardo</p>
-                        <p id="hum" class="speech-bubble speech-bubble-top2" href="#">{{ hum }} %</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
         
             <!-- Intro Section -->
         <section id="snapshot" class="injected-text">
@@ -177,15 +117,12 @@
                     <div class="col-lg-12">
                         <h1>Snapshot</h1>
                         <p>Take a look of my lab!</p>
-                        
                         <!--
-                        <p><a class="btn btn-success page-scroll" href="/snapshot/">Refresh</a></p>
                         <img src="/static/home.jpg?{{timestamp}}" class="img-responsive img-centered" align="middle" alt="My Lab!">
                         <img src="/video_feed" class="img-responsive img-centered" align="middle" alt="My Lab!">
-                        
                         -->
                         
-                        <img  id="pic" src="" class="img-responsive img-centered" align="middle" alt="My Lab!">
+                         <img src="/video_feed" class="img-responsive img-centered" align="middle" alt="My Lab!">
 
                     </div>
                 </div>
