@@ -35,12 +35,12 @@ def watchSerial():
             if leo1.componentData:
                 print(leo1.componentData)
                 socketio.emit("new_data", leo1.componentData, broadcast=True)
-        
+
 
 def process_data():
-    
+
     leo1.writeDevice("SUMMARY",False)
-    
+
     templateData = {
       'laser' : leo1.getData("LASER"),
       'comm_status' : comm.getState(),
@@ -48,8 +48,8 @@ def process_data():
       'hum'  : leo1.getData("HUMIDITY"),
       'timestamp'  : time.time()
       }
-    
-    
+
+
     return templateData
 
 @socketio.on('laser_toggle')

@@ -7,11 +7,11 @@ Created on Dec 7, 2015
 import time
 import os
 from threading import Thread
-    
+
 class  Camera(object):
     '''
     OS capture from camera
-    '''    
+    '''
 
     def __init__(self):
 
@@ -34,6 +34,6 @@ class  Camera(object):
         path = os.getcwd()
         self.frame = open(path + '/static/home.jpg', 'rb').read()
         return self.frame
-    
+
 if __name__ == "__main__":
     pass
