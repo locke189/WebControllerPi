@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"__",
+				"__name__ == '__main__':〔variable〕"
+			],
+			[
 				"command",
 				"commandI2C"
 			],
@@ -16,57 +20,21 @@
 	"buffers":
 	[
 		{
-			"contents": "'''\nCreated on Dec 7, 2015\n\n@author: Juan_Insuasti\n'''\n\nimport time\nimport os\nfrom threading import Thread\n    \nclass  Camera(object):\n    '''\n    OS capture from camera\n    '''    \n\n    def __init__(self):\n\n        path = os.getcwd()\n        self.fs_string = ('sudo fswebcam -r 640x480 -S 15 --flip h --jpeg 95 --shadow --title \"@Juan_Insuasti\" --subtitle \"Home\" --info \"Monitor: Active @ 1 fpm\" --save ' + path + '/static/home.jpg')\n        print(self.fs_string)\n        self.t1 = Thread(target=self.thread)\n        self.t1.start()\n\n    def thread(self):\n        while True:\n            time.sleep(3)\n            os.system(self.fs_string)\n            #if its been 10 seconds since the last access terminate thread\n            #if time.time() - self.last_access > 10:\n            #        break\n\n    def get_frame(self):\n        self.last_access = time.time()\n        path = os.getcwd()\n        self.frame = open(path + '/static/home.jpg', 'rb').read()\n        return self.frame\n    \nif __name__ == \"__main__\":\n    pass",
-			"file": "Media/Video.py",
-			"file_size": 1020,
-			"file_write_time": 130941963200000000,
-			"settings":
-			{
-				"buffer_size": 1020,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"contents": "'''\nCreated on Dec 6, 2015\n\n@author: Juan_Insuasti\n'''\n\n\nfrom flask import Flask, render_template, redirect, Response\nfrom SerialComms.SerialComms import SerialComms\nfrom ArduIoT.Leonardo import Leonardo\nimport os\nimport time\nfrom threading import Thread\nfrom flask.ext.socketio import SocketIO, emit\nfrom Media.Video import Camera\n\n\n\ncomm = SerialComms()\n#comm = SerialComms(port='/dev/tty.usbserial-DA01LNZV') # Just for osx testing\nleo1 = Leonardo(comm,\"A\") # serial comms device \"A\"\napp = Flask(__name__)\n\nsocketio = SocketIO(app) #SocketIO\n\n\n\ndef watchSerial():\n    '''\n    '''\n    while True:\n        received = leo1.readDeviceResponse()\n        if received:\n            print(\"New data!\")\n            if leo1.componentData:\n                print(leo1.componentData)\n                socketio.emit(\"new_data\", leo1.componentData, broadcast=True)\n        \n\ndef process_data():\n    \n    leo1.writeDevice(\"SUMMARY\",False)\n    \n    templateData = {\n      'laser' : leo1.getData(\"LASER\"),\n      'comm_status' : comm.getState(),\n      'temp' : leo1.getData(\"TEMPERATURE\"),\n      'hum'  : leo1.getData(\"HUMIDITY\"),\n      'timestamp'  : time.time()\n      }\n    \n    \n    return templateData\n\n@socketio.on('laser_toggle')\ndef laser_toggle(message):\n    '''\n    Receives a message\n    '''\n    leo1.writeDevice(\"LASER_TOGGLE\",False)\n\n@app.route(\"/\")\ndef mainpage():\n    return render_template('main_sockets.html', **process_data())\n\n\n\n@app.route(\"/laser/\")\ndef laser():\n    leo1.writeDevice(\"LASER_TOGGLE\",False)\n    return redirect(\"/\")\n\n\n\nif __name__ == \"__main__\":\n    Camera()\n    t1 = Thread(target=watchSerial)\n    t1.start()\n    socketio.run(app, host='0.0.0.0', port=80, debug=False, use_reloader=False, threaded=True)",
-			"file": "mainThreaded.py",
-			"file_size": 1719,
-			"file_write_time": 130941964970000000,
-			"settings":
-			{
-				"buffer_size": 1720,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/Users/Juan_Insuasti/Library/Application Support/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
-			"settings":
-			{
-				"buffer_size": 13676,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "templates/main_sockets.html",
-			"settings":
-			{
-				"buffer_size": 8386,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "DB/__init__.py",
-			"settings":
-			{
-				"buffer_size": 0,
-				"line_ending": "Unix"
-			}
-		},
-		{
 			"file": "DB/DBController.py",
 			"settings":
 			{
-				"buffer_size": 125,
+				"buffer_size": 469,
 				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "Python 2.7.10 (v2.7.10:15c95b7d81dc, May 23 2015, 09:33:12) \n[GCC 4.2.1 (Apple Inc. build 5666) (dot 3)] on darwin\nType \"help\", \"copyright\", \"credits\" or \"license\" for more information.\n>>> import rethinkdb as r\n\n\nclass DBController(object):\n    \"\"\"\n    DBController class.\n    Simplifies usage for RethinkDB\n\n    \"\"\"\n    def __init__(self):\n        '''\n        Constructor Method\n        '''\n\n\nif __name__ == '__main__':\n    r.connect( \"localhost\", 28015).repl()\n    print(\"Test End\")\n    #r.db(\"test\").table_create(\"authors\").run()\n\n>>> >>> >>> ... ... ... ... ... ... ... ... ... ... >>> >>> ... ... ... ... Traceback (most recent call last):\n  File \"<stdin>\", line 2, in <module>\n  File \"/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/rethinkdb/net.py\", line 623, in connect\n    return conn.reconnect(timeout=timeout)\n  File \"/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/rethinkdb/net.py\", line 542, in reconnect\n    return self._instance.connect(timeout)\n  File \"/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/rethinkdb/net.py\", line 416, in connect\n    self._socket = SocketWrapper(self, timeout)\n  File \"/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/rethinkdb/net.py\", line 310, in __init__\n    (self.host, self.port, ex))\nrethinkdb.errors.ReqlDriverError: Could not connect to localhost:28015. Error: [Errno 61] Connection refused\n>>> import rethinkdb as r\n>>> r.connect(\"localhost\",28015).repl()\nTraceback (most recent call last):\n  File \"<stdin>\", line 1, in <module>\n  File \"/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/rethinkdb/net.py\", line 623, in connect\n    return conn.reconnect(timeout=timeout)\n  File \"/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/rethinkdb/net.py\", line 542, in reconnect\n    return self._instance.connect(timeout)\n  File \"/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/rethinkdb/net.py\", line 416, in connect\n    self._socket = SocketWrapper(self, timeout)\n  File \"/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/rethinkdb/net.py\", line 310, in __init__\n    (self.host, self.port, ex))\nrethinkdb.errors.ReqlDriverError: Could not connect to localhost:28015. Error: [Errno 61] Connection refused\n>>> ",
+			"settings":
+			{
+				"buffer_size": 2391,
+				"line_ending": "Unix",
+				"name": "*REPL* [python]",
+				"scratch": true
 			}
 		}
 	],
@@ -78,9 +46,13 @@
 	"command_palette":
 	{
 		"height": 375.0,
-		"last_filter": "",
+		"last_filter": "pa",
 		"selected_items":
 		[
+			[
+				"pa",
+				"Package Control: Install Package"
+			],
 			[
 				"i",
 				"Package Control: Install Package"
@@ -114,10 +86,6 @@
 				"SublimeREPL: Python"
 			],
 			[
-				"pa",
-				"Package Control: Install Package"
-			],
-			[
 				"pag",
 				"Package Control: Remove Package"
 			],
@@ -146,7 +114,7 @@
 	},
 	"console":
 	{
-		"height": 125.0,
+		"height": 114.0,
 		"history":
 		[
 			"import urllib.request,os,hashlib; h = '2915d1851351e5ee549c20394736b442' + '8bc59f460fa1548d1514676163dafc88'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
@@ -163,17 +131,23 @@
 	},
 	"expanded_folders":
 	[
-		"/Users/Juan_Insuasti/workspace/WebControllerPi"
+		"/Users/Juan_Insuasti/workspace/WebControllerPi",
+		"/Users/Juan_Insuasti/workspace/WebControllerPi/DB"
 	],
 	"file_history":
 	[
+		"/Users/Juan_Insuasti/workspace/WebControllerPi/Media/Video.py",
+		"/Users/Juan_Insuasti/workspace/WebControllerPi/mainThreaded.py",
+		"/Users/Juan_Insuasti/Library/Application Support/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
+		"/Users/Juan_Insuasti/workspace/WebControllerPi/templates/main_sockets.html",
+		"/Users/Juan_Insuasti/workspace/WebControllerPi/DB/DBController.py",
+		"/Users/Juan_Insuasti/workspace/WebControllerPi/DB/__init__.py",
 		"/Users/Juan_Insuasti/Library/Application Support/Sublime Text 2/Packages/SublimeLinter/SublimeLinter.sublime-settings",
 		"/Users/Juan_Insuasti/Library/Application Support/Sublime Text 2/Packages/User/SublimeLinter.sublime-settings",
 		"/Users/Juan_Insuasti/Library/Application Support/Sublime Text 2/Packages/User/QuickThemes.sublime-settings",
 		"/Users/Juan_Insuasti/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
 		"/Users/Juan_Insuasti/Library/Application Support/Sublime Text 2/Packages/QuickThemes/QuickThemes.sublime-settings",
 		"/Users/Juan_Insuasti/Library/Application Support/Sublime Text 2/Packages/Pylinter/Pylinter.sublime-settings",
-		"/Users/Juan_Insuasti/Library/Application Support/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
 		"/Users/Juan_Insuasti/workspace/WebControllerPi/templates/test.html",
 		"/Users/Juan_Insuasti/workspace/WebControllerPi/test.py",
 		"/Users/Juan_Insuasti/workspace/WebControllerPi/Media/test.py",
@@ -220,280 +194,96 @@
 	"groups":
 	[
 		{
-			"sheets":
-			[
-			]
-		},
-		{
-			"selected": 1,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "Media/Video.py",
+					"file": "DB/DBController.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1020,
+						"buffer_size": 469,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1011,
-								1011
+								469,
+								125
 							]
 						],
 						"settings":
 						{
 							"auto_complete": false,
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/Python/Python.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "mainThreaded.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1720,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1327,
-								1327
-							]
-						],
-						"settings":
-						{
-							"auto_complete": false,
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 642.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "/Users/Juan_Insuasti/Library/Application Support/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
+					"buffer": 1,
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 13676,
+						"buffer_size": 2391,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								2391,
+								2391
 							]
 						],
 						"settings":
 						{
-							"annotations":
-							[
-								"TODO",
-								"README",
-								"FIXME"
-							],
-							"csslint_options":
+							"auto_complete": false,
+							"auto_indent": false,
+							"default_dir": "/Users/Juan_Insuasti/workspace/WebControllerPi",
+							"detect_indentation": false,
+							"gutter": false,
+							"history_arrows": true,
+							"indent_subsequent_lines": false,
+							"line_numbers": false,
+							"repl": true,
+							"repl_external_id": "python",
+							"repl_id": "abc352d3e59a4c9a9391124d5eb1dce4",
+							"repl_restart_args":
 							{
-								"adjoining-classes": "warning",
-								"box-model": true,
-								"box-sizing": "warning",
-								"compatible-vendor-prefixes": "warning",
-								"display-property-grouping": true,
-								"duplicate-background-images": "warning",
-								"duplicate-properties": true,
-								"empty-rules": true,
-								"errors": true,
-								"fallback-colors": "warning",
-								"floats": "warning",
-								"font-faces": "warning",
-								"font-sizes": "warning",
-								"gradients": "warning",
-								"ids": "warning",
-								"import": "warning",
-								"important": "warning",
-								"known-properties": true,
-								"outline-none": "warning",
-								"overqualified-elements": "warning",
-								"qualified-headings": "warning",
-								"regex-selectors": "warning",
-								"rules-count": "warning",
-								"shorthand": "warning",
-								"star-property-hack": "warning",
-								"text-indent": "warning",
-								"underscore-property-hack": "warning",
-								"unique-headings": "warning",
-								"universal-selector": "warning",
-								"vendor-prefix": true,
-								"zero-units": "warning"
+								"cmd":
+								[
+									"python",
+									"-i",
+									"-u"
+								],
+								"cwd": "$file_path",
+								"encoding": "utf8",
+								"extend_env":
+								{
+									"PYTHONIOENCODING": "utf-8"
+								},
+								"external_id": "python",
+								"syntax": "Packages/Python/Python.tmLanguage",
+								"type": "subprocess"
 							},
-							"gjslint_ignore":
-							[
-								110.0
-							],
-							"gjslint_options":
-							[
-							],
-							"javascript_linter": "jshint",
-							"jshint_options":
-							{
-								"browser": true,
-								"devel": true,
-								"evil": true,
-								"regexdash": true,
-								"sub": true,
-								"trailing": true,
-								"wsh": true
-							},
-							"pep8": true,
-							"pep8_ignore":
-							[
-								"E501"
-							],
-							"perl_linter": "perlcritic",
-							"pyflakes_ignore":
-							[
-							],
-							"pyflakes_ignore_import_*": true,
-							"sublimelinter": "load-save",
-							"sublimelinter_delay": 2.0,
-							"sublimelinter_disable":
-							[
-							],
-							"sublimelinter_executable_map":
-							{
-							},
-							"sublimelinter_fill_outlines": false,
-							"sublimelinter_gutter_marks": true,
-							"sublimelinter_gutter_marks_theme": "simple",
-							"sublimelinter_mark_style": "none",
-							"sublimelinter_notes": false,
-							"sublimelinter_objj_check_ascii": false,
-							"sublimelinter_popup_errors_on_save": false,
-							"sublimelinter_syntax_map":
-							{
-								"C++": "c",
-								"Python Django": "python",
-								"Ruby on Rails": "ruby"
-							},
-							"sublimelinter_wrap_find": true,
-							"syntax": "Packages/AAAPackageDev/Syntax Definitions/Sublime Settings.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"repl_sublime2": false,
+							"smart_indent": false,
+							"spell_check": false,
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 184.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "templates/main_sockets.html",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 8386,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2768,
-								2768
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 877.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "DB/__init__.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 0,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "DB/DBController.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 125,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								121,
-								121
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
+					"stack_index": 1,
 					"type": "text"
 				}
 			]
@@ -516,18 +306,11 @@
 				0,
 				1,
 				1
-			],
-			[
-				1,
-				0,
-				2,
-				1
 			]
 		],
 		"cols":
 		[
 			0.0,
-			0.0451263537906,
 			1.0
 		],
 		"rows":
@@ -587,7 +370,7 @@
 	"show_open_files": true,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 172.0,
+	"side_bar_width": 296.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{
