@@ -122,6 +122,7 @@ int pir0;
 
 //Light Analog Sensor
 int light0_value = 0;
+int light0_raw;
 
 /* $003$ Setup and Initialization  */
 
@@ -328,8 +329,8 @@ void loop() {
     humidity = dht.readHumidity();
 
     //light also measured
-    light0_value = analogRead(LIGHT0_PIN);
-    
+    light0_raw = analogRead(LIGHT0_PIN);
+    light0_value = map(light0_raw,500,1100,0,100); 
     //Reset timestamp 
     sensor_timeStamp = millis();
     }
@@ -372,7 +373,13 @@ void loop() {
           Serial1.write(RS);
           Serial1.write(PIR0_ID);
           pir0 = digitalRead(PIR0_PIN);
-          Serial1.print(pir0);
+          if(pir0 == 0){
+            Serial1.print("-");
+            }
+          else{
+            Serial1.print("+");
+          }
+            
 
 
           //light sensor

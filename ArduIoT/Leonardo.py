@@ -3,7 +3,7 @@ Created on Dec 4, 2015
 
 @author: Juan_Insuasti
 '''
-
+from DB.DBController import DBController
 from SerialComms.SerialComms import SerialComms
 
 
@@ -23,32 +23,38 @@ class Leonardo(object):
         The deviceID correspond to the deviceID in the Arduino's firmware.
         serial must be an object of the class SerialComms.
         '''
-        
+
         self.thisDevice = deviceID
         self.serial = serial
-        
+
         #Data declaration
-        
+
         self.arduinoSensorIDs = { "0": 'LASER',
                                   "2": 'TEMPERATURE',
-                                  "3": 'HUMIDITY' }
-        
+                                  "3": 'HUMIDITY',
+                                  "4": 'PIR',
+                                  "5": 'LIGHT'
+                                  "a": 'SERVO'}
+
         self.arduinoCommands = { 'SUMMARY': "/",
                                  'LASER_TOGGLE': "0",
                                  'LASER_STATUS': "1",
                                  'TEMPERAUTRE_READ': "2",
-                                 'HUMIDITY_READ': "3" }
-        
+                                 'HUMIDITY_READ': "3",
+                                 'SERVO_STEP_UP': "a",
+                                 'SERVO_STEP_DOWN': "b",
+                                 'SERVO_SET': "c"}
+
         self.arduinoValues  =   { "+" : "ON",
                                   "-" : "OFF"}
-        
-        
+
+
         self.rawData = []
-        
+
         self.componentData = {}
-        
-    
-    
+
+
+
     def getData(self,ID):
         '''
         getData method to get data from sensors/actuators.
@@ -57,8 +63,8 @@ class Leonardo(object):
             return self.componentData[ID]
         else:
             return "No DATA"
-        
-    
+
+
     def decode(self):
         '''
         decode()
@@ -77,28 +83,28 @@ class Leonardo(object):
                         else:
                             self.componentData[sensor] = value
 
-    
+
+
     def readDeviceResponse(self):
         '''
         readDeviceResponse()
-        Waits for the arduino to send a response. data is stored in the 
+        Waits for the arduino to send a response. data is stored in the
         rawData variable.
         '''
-        
+
         self.rawData = self.serial.serialRead()
-        self.decode()
-        
-        if not self.rawData:
-            return False
-        else:
+        if self.rawData:
+            self.decode()
             print(self.rawData)
             return True
-        
-        
+        else: self.rawData:
+            return False
+
+
     def writeDevice(self, command,response=True):
         '''
         readDeviceResponse()
-        Waits for the arduino to send a response. data is stored in the 
+        Waits for the arduino to send a response. data is stored in the
         rawData variable.
         '''
         if command in self.arduinoCommands.keys():
@@ -106,19 +112,21 @@ class Leonardo(object):
             self.serial.serialWrite(data)
         else:
             print("Leonardo: Command not found")
-            
+
         if response:
             self.readDeviceResponse()
-        
-        
-    
-        
+
+
+
+
+
+
 if __name__ == "__main__":
     comm = SerialComms(port='/dev/tty.usbserial-DA01LNZV')
     leo1 = Leonardo(comm,'A')
     leo1.writeDevice("LASER_TOGGLE")
     leo1.startReadThread()
     print(leo1.componentData)
-    
-            
-        
+
+
+

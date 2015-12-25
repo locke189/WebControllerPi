@@ -16,12 +16,14 @@ from Media.Video import Camera
 
 
 
-comm = SerialComms()
-#comm = SerialComms(port='/dev/tty.usbserial-DA01LNZV') # Just for osx testing
-leo1 = Leonardo(comm,"A") # serial comms device "A"
-app = Flask(__name__)
+if os.getlogin() == 'Juan_Insuasti':
+    comm = SerialComms(port='/dev/tty.usbserial-DA01LNZV')
+else:
+    comm = SerialComms()
 
-socketio = SocketIO(app) #SocketIO
+leo1      = Leonardo(comm,"A") # serial comms device "A"
+app       = Flask(__name__)
+socketio  = SocketIO(app) #SocketIO
 
 
 
@@ -30,6 +32,7 @@ def watchSerial():
     '''
     while True:
         received = leo1.readDeviceResponse()
+        #Data should be loaded from DB not IoT device itself
         if received:
             print("New data!")
             if leo1.componentData:
