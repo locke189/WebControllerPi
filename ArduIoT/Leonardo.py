@@ -5,6 +5,7 @@ Created on Dec 4, 2015
 '''
 from DB.DBController import DBController
 from SerialComms.SerialComms import SerialComms
+import time
 
 
 class Leonardo(object):
@@ -24,6 +25,8 @@ class Leonardo(object):
         serial must be an object of the class SerialComms.
         '''
 
+        self.DB = DBController()
+
         self.thisDevice = deviceID
         self.serial = serial
 
@@ -33,7 +36,7 @@ class Leonardo(object):
                                   "2": 'TEMPERATURE',
                                   "3": 'HUMIDITY',
                                   "4": 'PIR',
-                                  "5": 'LIGHT'
+                                  "5": 'LIGHT',
                                   "a": 'SERVO'}
 
         self.arduinoCommands = { 'SUMMARY': "/",
@@ -64,6 +67,11 @@ class Leonardo(object):
         else:
             return "No DATA"
 
+    def time(self):
+        time_data = [time.strftime("%Y"),time.strftime("%m"),time.strftime("%d"),time.strftime("%H:%M:%S")]
+
+        return time_data
+
 
     def decode(self):
         '''
@@ -72,17 +80,21 @@ class Leonardo(object):
         '''
         if self.rawData:
             if self.rawData.pop(0) == self.thisDevice:
+                self.componentData = {}
                 for data in self.rawData:
-                    if data == chr(0x04): #endoffile
+                    if data == chr(0x04) or data[0] == '\x04' : #endoffile
+                        self.componentData["Timestamp"] = self.time()
                         return
                     else:
-                        sensor = self.arduinoSensorIDs[data[0]]
-                        value  = data[1:]
-                        if value in self.arduinoValues.keys():
-                            self.componentData[sensor] = self.arduinoValues[value]
-                        else:
-                            self.componentData[sensor] = value
+                        if data[0] in self.arduinoSensorIDs.keys():
+                            sensor = self.arduinoSensorIDs[data[0]]
+                            value  = data[1:]
+                            if value in self.arduinoValues.keys():
+                                self.componentData[sensor] = self.arduinoValues[value]
+                            else:
+                                self.componentData[sensor] = value
 
+                self.componentData["Timestamp"] = self.time()
 
 
     def readDeviceResponse(self):
@@ -93,11 +105,13 @@ class Leonardo(object):
         '''
 
         self.rawData = self.serial.serialRead()
-        if self.rawData:
+        print("len(): ",len(self.rawData))
+        if len(self.rawData) > 7:
+            print("RDR >>",self.rawData)
             self.decode()
-            print(self.rawData)
+            self.DB.append("SENSOR_DATA",self.componentData)
             return True
-        else: self.rawData:
+        else:
             return False
 
 

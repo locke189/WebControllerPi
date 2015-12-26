@@ -67,14 +67,14 @@ DHT dht(DHTPIN, DHTTYPE);   //declaration of DHT object
 
 // Time options
 #define   SENSOR_TIME     10000 // 10 seconds
-#define   UPDATE_TIME     5000 // 5 seconds
+#define   UPDATE_TIME     2000 // 5 seconds
 
 //Sensor/actuator pins
-#define LASER_PIN     12
+#define LASER_PIN      5 //ok 
 #define BOARD_LED     13
-#define SERVO0_PIN     9
-#define PIR0_PIN       2
-#define LIGHT0_PIN     0
+#define SERVO0_PIN     9 //ok
+#define PIR0_PIN       2 //ok
+#define LIGHT0_PIN     0 //0k
 
 
 //Serial parameters
@@ -96,7 +96,7 @@ String serialData;
 // Servos
 
 Servo servo0;
-int servo0_pos = 0;
+int servo0_pos = 90;
 
 
 //Actuator Flags
@@ -147,6 +147,7 @@ void setup() {
 
 //Servo configuration
   servo0.attach(SERVO0_PIN);
+  servo0.write(servo0_pos);
 
 //first timestamp
   sensor_timeStamp = millis();
@@ -209,10 +210,12 @@ void loop() {
    
    /*  Operation "0" laser toggle  */ 
     if( (serialData[2] == LASER_TOGGLE) && (deviceEnabled == true) && (laser_state == false) ){
+         /*
          Serial1.write(LASER_ID);
          Serial1.write(LASER_ON);
          Serial1.write(RS);
          Serial1.write(EOT);
+         */
          digitalWrite (LASER_PIN, HIGH);
          laser_state = true;
          deactivateDevice();
@@ -220,10 +223,12 @@ void loop() {
     }
     
     if( (serialData[2] == LASER_TOGGLE) && (deviceEnabled == true) && (laser_state == true) ){
+         /*
          Serial1.write(LASER_ID);
          Serial1.write(LASER_OFF);
          Serial1.write(RS);
          Serial1.write(EOT); 
+         */
          digitalWrite (LASER_PIN, LOW);
          laser_state = false;
          deactivateDevice();
@@ -259,10 +264,12 @@ void loop() {
              servo0_pos = 180;
          }
          servo0.write(servo0_pos);
+         /*
          Serial1.write(SERVO0_ID);
          Serial1.print(servo0_pos);
          Serial1.write(RS);
          Serial1.write(EOT); 
+         */
     }
 
     /*SERVO STEP DOWN -  5 degrees*/
@@ -272,10 +279,12 @@ void loop() {
              servo0_pos = 0;
          }
          servo0.write(servo0_pos);
+         /*
          Serial1.write(SERVO0_ID);
          Serial1.print(servo0_pos);
          Serial1.write(RS);
          Serial1.write(EOT); 
+         */
     }
 
     /*SERVO SET -  ? degrees*/
@@ -287,14 +296,9 @@ void loop() {
          while (serialData[x+1]){
               x +=1;
           }
-         Serial.print(x);
+         
          for( int i = x ; i >= 3; i -= 1){
-            Serial.print("-");
-            Serial.print(i);
-            Serial.print("/");
             num  = int(serialData[i]) - 48;
-            Serial.println(num);
-            Serial.print("-");
             mult = int(pow(10,(x-i)));
             pos  = pos + num * mult;
          }
@@ -309,10 +313,12 @@ void loop() {
          }
          
          servo0.write(servo0_pos);
+         /*     
          Serial1.write(SERVO0_ID);
          Serial1.print(servo0_pos);
          Serial1.write(RS);
          Serial1.write(EOT); 
+         */
     }
 
 

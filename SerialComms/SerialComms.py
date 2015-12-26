@@ -30,7 +30,7 @@ class SerialComms(object):
 
 
 
-    def __init__(self, port='/dev/ttyUSB0', baud = 57600, timeout = 2):
+    def __init__(self, port='/dev/ttyUSB0', baud = 57600, timeout = 5):
         '''
         Constructor,
         Opens serial port in RaspberryPi and gets status
