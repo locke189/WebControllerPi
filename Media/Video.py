@@ -16,7 +16,7 @@ class  Camera(object):
     def __init__(self):
 
         path = os.getcwd()
-        self.fs_string = ('sudo fswebcam -b -q -r 640x480 -S 8 -F 2 --flip h --jpeg 95 --shadow --title "@Juan_Insuasti" --subtitle "Home" --info "Monitor: Active @ 1 fps" --save ' + path + '/static/home.jpg' + ' &')
+        self.fs_string = ('sudo fswebcam -b -r 640x480 -S 8 --flip h --jpeg 95 --shadow --title "@Juan_Insuasti" --subtitle "Home" --info "Monitor: Active @ 1 fps" --save ' + path + '/static/home.jpg')
         print(self.fs_string)
         self.t1 = Thread(target=self.thread)
         self.t1.start()
