@@ -38,7 +38,7 @@ class SerialComms(object):
 
         self.RS = chr(0x1E) #Record Separator
         self.SOH = chr(0x01) #Start of header
-        self.EOT = chr(0x04) #End of transmition
+        self.EOT = chr(0x0A) #End of transmition // EOL was needed
 
 
 

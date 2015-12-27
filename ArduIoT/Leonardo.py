@@ -82,7 +82,7 @@ class Leonardo(object):
             if self.rawData.pop(0) == self.thisDevice:
                 self.componentData = {}
                 for data in self.rawData:
-                    if data == chr(0x04) or data[0] == '\x04' : #endoffile
+                    if data == self.serial.EOT: #endoffile
                         self.componentData["Timestamp"] = self.time()
                         return
                     else:

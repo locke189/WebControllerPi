@@ -32,7 +32,7 @@ DHT dht(DHTPIN, DHTTYPE);   //declaration of DHT object
 
 //Serial Port Definitions
 #define   SOH     0x01
-#define   EOT     0x04
+#define   EOT     0x0A
 #define   RS      0x1E
 
  
